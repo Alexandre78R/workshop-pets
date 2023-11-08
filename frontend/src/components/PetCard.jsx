@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 function PetCard (props) {
     const [display, setDisplay] = useState(false);
-    const { name, weight, photo, sleepAmount, curious} = props;
+    const { name, weight, photo, sleepAmount, curious } = props;
 
     function togleDisplay () {
         setDisplay(!display)

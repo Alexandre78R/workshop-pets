@@ -6,7 +6,9 @@ import PetCard from "./components/PetCard";
 
 function App() {
 
-  const [pets, setPets] = useState(null);
+  const [pets, setPets] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const questionPerPage = 5;
 
   useEffect(() => {
     fetch("https://wild.creativebrain.fr/pets")
@@ -16,13 +18,22 @@ function App() {
       setPets(data);
     });
   }, [])
+
+  const pagination = () => {
+    let indexLast = currentPage * questionPerPage;
+    let indexFirst = indexLast - questionPerPage;
+    return pets.slice(indexFirst, indexLast);
+  }
+
+
   
   return (
     <>
-    <h1>Coucou</h1>
     {
       pets ? 
-      pets.map((pet, index) => {
+      <>
+      <h1>Page {currentPage} - {Math.ceil(pets.length / questionPerPage)} </h1>
+      {pagination().map((pet, index) => {
         return (
           <div key={index}>
             <PetCard
@@ -34,12 +45,17 @@ function App() {
             />
           </div>
         )
-      })
+      })}
+      </>
       :
       "Chargement ..."
     }
-
-    
+    {
+      currentPage <= 1 ? null : <button onClick={() => setCurrentPage(currentPage - 1)}>Previous</button>
+    }
+    {
+      currentPage < Math.ceil(pets.length / questionPerPage)  ? <button onClick={() => setCurrentPage(currentPage + 1)}>Next</button> : null
+    }
     </>
   );
 }
